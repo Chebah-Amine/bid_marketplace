@@ -1,0 +1,74 @@
+.listing-container {
+    display: flex;
+    flex-direction: column;
+}
+
+.listing-header {
+    text-align: center;
+    margin-bottom: 20px;
+    width: 50%;
+    align-self: center;
+}
+
+.listing-image {
+    width: 40%;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    margin: 10px 0;
+}
+
+.listing-actions {
+    margin-top: 15px;
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+}
+
+.inline-form {
+    display: inline;
+}
+
+.listing-body {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 20px;
+}
+
+.listing-info,
+.listing-bid,
+.listing-add-comment,
+.listing-comments {
+    flex: 1;
+    min-width: 300px;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    background-color: #f9f9f9;
+}
+
+#price {
+    color: blue;
+}
+
+.listing-container h3 {
+    margin-top: 0;
+}
+
+.listing-container ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.listing-container ul li {
+    margin-bottom: 10px;
+    padding: 10px;
+    background: #fff;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.listing-container button {
+    cursor: pointer;
+}

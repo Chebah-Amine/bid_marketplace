@@ -1,0 +1,34 @@
+<div class="card">
+    <div class="image">
+        {% if entry.image_url %}
+            <img src="{{entry.image_url}}" alt="listing image">
+        {% else %}
+            <img src="https://www.shutterstock.com/image-vector/image-icon-600nw-211642900.jpg" alt="default listing image">
+        {% endif %}
+    </div>
+    {% if entry.title %}
+        <div class="content">
+            <p class="title">
+                {{ entry.title }}
+            </p>
+            <p class="price">
+                {{ entry.current_price }}$
+            </p>
+            <p class="description">
+                {{ entry.description|slice:":50" }}{% if entry.description|length > 50 %}...{% endif %}
+            </p>
+        </div>
+        <a class="cta" href="{% url 'listing' entry.id %}">
+            <i class="bi bi-arrow-right"></i>
+        </a>
+    {% elif entry.name %} 
+        <div class="content">
+            <p class="title">
+                {{ entry.name }}
+            </p>
+        </div>
+        <a class="cta" href="{% url 'category' entry.id %}">
+            <i class="bi bi-arrow-right"></i>
+        </a>
+    {% endif %}
+</div>

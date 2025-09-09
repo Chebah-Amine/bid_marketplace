@@ -1,0 +1,12 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+    <h2>Watchlist Listings</h2>
+    <div class="card-container">
+        {% for entry in listings %}
+            {% include 'auctions/card.html' %}
+        {% empty %}
+            <p>NO LISTINGS</p>
+        {% endfor %}
+    </div>
+{% endblock %}
