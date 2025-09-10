@@ -1,0 +1,15 @@
+# Test tools
+pytest
+pytest-django
+coverage
+
+# Linting & fomatting
+flake8
+black
+
+# Security
+bandit
+safety
+
+# Code complexity
+radon

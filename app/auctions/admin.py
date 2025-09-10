@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import *
+from .models import Bid, Category, Listing, Comment, Watchlist
 
 # Register your models here.
 admin.site.register(Category)

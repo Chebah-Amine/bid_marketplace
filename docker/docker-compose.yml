@@ -1,0 +1,13 @@
+services:
+  bid_marketplace:
+    build: 
+      context: ..
+      dockerfile: docker/Dockerfile
+    container_name: bid_marketplace_app
+    env_file:
+      # GET all the variables from the .env file
+      - ../.env
+    volumes:
+      - ../app:/app
+    ports:
+      - "8000:8000"

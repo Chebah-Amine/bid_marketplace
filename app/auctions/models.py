@@ -37,7 +37,7 @@ class Listing(models.Model):
 
     def highest_bid(self):
         return self.bids.order_by("-amount").first()
-    
+
     def current_price(self):
         highest_bid = self.highest_bid()
         return highest_bid.amount if highest_bid else self.starting_bid
