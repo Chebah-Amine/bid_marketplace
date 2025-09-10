@@ -1,7 +1,7 @@
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from django.db import IntegrityError
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
@@ -260,7 +260,7 @@ def categories_view(request):
         return render(
             request,
             "auctions/error.html",
-            {"code": 400, "message": f"Error loading the categories"},
+            {"code": 400, "message": f"Error loading the categories : {e}"},
         )
 
     return render(request, "auctions/categories.html", {"categories": categories})

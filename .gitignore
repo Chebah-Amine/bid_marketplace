@@ -1,0 +1,16 @@
+# Compiled files
+__pycache__/
+*.py[cod]
+*.pyo
+
+# SQLite database
+db.sqlite3
+
+*.env
+
+# Cache and generated files
+*.pot
+*.pyc
+*.pyd
+*.pdb
+*.so
