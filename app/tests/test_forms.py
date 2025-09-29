@@ -45,7 +45,7 @@ def test_listing_form_valid():
             "title": "iPhone 14",
             "description": "Brand new iPhone",
             "starting_bid": "100",
-            "image_url": "http://example.com/image.jpg",
+            "image_url": "https://example.com/image.jpg",
             "category": category.id,
         }
     )
