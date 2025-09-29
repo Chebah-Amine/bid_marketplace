@@ -46,8 +46,10 @@ jobs:
         uses: SonarSource/sonarcloud-github-action@v2
         with:
           args: >
+            -Dsonar.verbose=true
+            -Dsonar.inclusions=app/auctions/views.py,app/auctions/forms.py
             -Dsonar.projectKey=Chebah-Amine_bid_marketplace
             -Dsonar.organization=chebah-amine
-            -Dsonar.python.coverage.reportPaths=./app/coverage.xml
+            -Dsonar.python.coverage.reportPaths=app/coverage.xml
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
