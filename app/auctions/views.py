@@ -5,61 +5,8 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
-from django import forms
-
+from .forms import BidForm, CommentForm, ListingForm
 from .models import User, Listing, Category, Bid, Comment, Watchlist
-
-
-class BidForm(forms.Form):
-    bid = forms.DecimalField(
-        max_digits=10, decimal_places=2, label="Bid ($):", min_value=0.01
-    )
-
-
-class CommentForm(forms.Form):
-    comment = forms.CharField(
-        max_length=500,
-        widget=forms.Textarea(attrs={"rows": 5, "placeholder": "Add a comment..."}),
-        label="Comment",
-    )
-
-
-class ListingForm(forms.Form):
-    title = forms.CharField(
-        max_length=100,
-        label="Title",
-        widget=forms.TextInput(
-            attrs={"class": "form-control", "placeholder": "Enter the title"}
-        ),
-    )
-    description = forms.CharField(
-        max_length=500,
-        label="Description",
-        widget=forms.Textarea(
-            attrs={"class": "form-control", "placeholder": "Describe your listing"}
-        ),
-    )
-    starting_bid = forms.DecimalField(
-        max_digits=10,
-        decimal_places=2,
-        label="Starting Bid ($)",
-        widget=forms.NumberInput(
-            attrs={"class": "form-control", "placeholder": "Enter starting bid"}
-        ),
-    )
-    image_url = forms.URLField(
-        required=False,
-        label="Image URL",
-        widget=forms.URLInput(
-            attrs={"class": "form-control", "placeholder": "Optional image URL"}
-        ),
-    )
-    category = forms.ModelChoiceField(
-        queryset=Category.objects.all(),
-        required=False,
-        label="Category",
-        widget=forms.Select(attrs={"class": "form-control"}),
-    )
 
 
 def index(request):
@@ -78,49 +25,24 @@ def create_listing_view(request):
             image_url = form.cleaned_data["image_url"]
             category = form.cleaned_data["category"]
 
-            errors = False
-
-            # check if fields respect specifications
-            if not (1 <= len(title) <= 100):
-                form.add_error(
-                    "title",
-                    "Title must be between 1 and 100 characters.",
+            try:
+                new_listing = Listing.objects.create(
+                    title=title,
+                    description=description,
+                    starting_bid=starting_bid,
+                    image_url=image_url or None,
+                    category=category,
+                    created_by=request.user,
                 )
-                errors = True
-
-            if not (1 <= len(description) <= 500):
-                form.add_error(
-                    "description",
-                    "Description must be between 1 and 500 characters.",
+                messages.success(request, "Listing created successfully!")
+                return redirect("listing", id=new_listing.id)
+            except Exception as e:
+                messages.error(request, f"An error occurred: {e}")
+                return render(
+                    request,
+                    "auctions/error.html",
+                    {"code": 400, "message": "Error creating a new listing."},
                 )
-                errors = True
-
-            if float(starting_bid) <= 0:
-                form.add_error(
-                    "starting_bid",
-                    "Starting bid must be greater than $0.",
-                )
-                errors = True
-
-            if not errors:
-                try:
-                    new_listing = Listing.objects.create(
-                        title=title,
-                        description=description,
-                        starting_bid=starting_bid,
-                        image_url=image_url or None,
-                        category=category,
-                        created_by=request.user,
-                    )
-                    messages.success(request, "Listing created successfully!")
-                    return redirect("listing", id=new_listing.id)
-                except Exception as e:
-                    messages.error(request, f"An error occurred: {e}")
-                    return render(
-                        request,
-                        "auctions/error.html",
-                        {"code": 400, "message": "Error creating a new listing."},
-                    )
     else:
         form = ListingForm()
 
@@ -131,8 +53,8 @@ def listing_view(request, id):
     try:
         listing = get_object_or_404(Listing, id=id)
     except Exception as e:
-        return (
-            render(request),
+        return render(
+            request,
             "auctions/error.html",
             {"code": 404, "message": f"Listing with id {id} not found !\n{e}"},
         )
@@ -152,7 +74,6 @@ def listing_view(request, id):
     winner = listing.winner(request.user)
 
     if request.method == "POST" and request.user.is_authenticated:
-        print(request.POST)
         if "bid" in request.POST:
             bid_form = BidForm(request.POST)
             if bid_form.is_valid():
@@ -170,17 +91,11 @@ def listing_view(request, id):
             comment_form = CommentForm(request.POST)
             if comment_form.is_valid():
                 comment_text = comment_form.cleaned_data["comment"]
-                if comment_text.strip() and len(comment_text) <= 500:
-                    Comment.objects.create(
-                        listing=listing, commenter=request.user, content=comment_text
-                    )
-                    messages.success(request, "Your comment was added!")
-                    return redirect("listing", id=id)
-                else:
-                    comment_form.add_error(
-                        "comment",
-                        "Comment must not be empty and must contain less than 500 characters.",
-                    )
+                Comment.objects.create(
+                    listing=listing, commenter=request.user, content=comment_text
+                )
+                messages.success(request, "Your comment was added!")
+                return redirect("listing", id=id)
 
     return render(
         request,

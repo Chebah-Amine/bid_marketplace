@@ -15,8 +15,8 @@ logs:
 exec: 
 	docker compose -f ${DOCKERFILE_PATH} exec bid_marketplace bash
 
-test:
-	docker compose -f ${DOCKERFILE_PATH} exec bid_marketplace sh -c "coverage run --source=network -m pytest && coverage report -m --include='*/network/views.py'"
+test: 
+	docker compose -f ${DOCKERFILE_PATH} exec bid_marketplace pytest
 
 format:
 	docker compose -f ${DOCKERFILE_PATH} exec bid_marketplace black .
@@ -28,4 +28,7 @@ safety:
 	docker compose -f ${DOCKERFILE_PATH} exec bid_marketplace safety check --full-report
 
 bandit:
-	docker compose -f ${DOCKERFILE_PATH} exec bid_marketplace bandit -r ./app/network
+	docker compose -f ${DOCKERFILE_PATH} exec bid_marketplace bandit -r auctions
+
+coverage:
+	docker compose -f ${DOCKERFILE_PATH} exec bid_marketplace sh -c "coverage run --source=auctions -m pytest && coverage report -m --include='*/auctions/views.py,*/auctions/forms.py'"
