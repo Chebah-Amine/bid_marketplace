@@ -14,3 +14,8 @@ db.sqlite3
 *.pyd
 *.pdb
 *.so
+
+# coverage files
+.coverage
+coverage.xml
+htmlcov/
